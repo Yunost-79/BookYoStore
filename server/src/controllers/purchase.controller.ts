@@ -18,6 +18,8 @@ export const addToPurchaseList = async (req: PurchaseRequest, res: Response) => 
     return res.status(EStatusCodes.BAD_REQUEST).json({ message: 'Items array is required' });
   }
 
+  
+
   try {
     let purchaseList = await PurchaseList.findOne({ userId });
 

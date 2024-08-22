@@ -1,36 +1,28 @@
 import { Document } from 'mongoose';
 
 type Images = {
-  mini_images: string[];
-  medium_images: string[];
-  big_images: string[];
+  image: string;
+  previewImage: string;
 };
 
-type BookDetails = {
-  article: string | null;
-  author: string | null;
-  series: string | null;
-  language: string | null;
-  imprintDate: string | null;
-  bookCover: string | null;
-  pages: string | null;
-  format: string | null;
-  translator: string | null;
-  ISBN: string | null;
-  manufacturer: string | null;
-  barcode: string | null;
-};
-
-type BookPrice = {
+type PriceInfo = {
   price: string | null;
-  salePrice: string | null;
-  priceCurrency: string | null;
+  currencySymbol: string | null;
+};
+
+type ProductInformation = {
+  genre: string | null;
+  stock: string | null;
+  rating: number | null;
+  upc: string | null;
+  productType: string | null;
+  priceInfo: PriceInfo;
+  numberOfReviews: string | null;
 };
 
 export interface Book extends Document {
   title: string;
   images: Images;
-  bookDetails: BookDetails;
-  bookPrice: BookPrice;
-  description: (string | null)[];
+  productInformation: ProductInformation;
+  description: string | null;
 }

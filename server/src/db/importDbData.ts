@@ -12,12 +12,14 @@ const importData = async () => {
 
   const bar = new cliProgress.SingleBar(
     {
-      format: `Importing data [{bar}] {percentage}% | {value}/{total} items`,
+      format: `Importing data [{bar}] {percentage}% | {value}/{total} items | Speed: {speed} items/sec`,
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
     },
     cliProgress.Presets.shades_classic
   );
+
+  const startTime = Date.now();
 
   try {
     const filePath = path.join(__dirname, '../../../jsonDB/bookParse.json');
@@ -34,9 +36,12 @@ const importData = async () => {
 
       bar.start(data.length, 0);
 
-      // for (let i = 0; i < data.length); i++) {
-      // Limit to 500 items
-      for (let i = 0; i < 500; i++) {
+      let lastUpdateTime = startTime;
+      let lastUpdateCount = 0;
+
+      for (let i = 0; i < data.length; i++) {
+        // Limit to 500 items
+        // for (let i = 0; i < 500; i++) {
         const item = data[i];
 
         try {
@@ -49,6 +54,17 @@ const importData = async () => {
           errorsLog.push(errorMessage);
         }
         bar.update(i + 1);
+
+        const currentTime = Date.now();
+        if (currentTime - lastUpdateTime >= 1000) {
+          const speed = Math.floor(
+            (i + 1 - lastUpdateCount) / ((currentTime - lastUpdateTime) / 1000)
+          );
+
+          bar.update(i + 1, { speed });
+          lastUpdateTime = currentTime;
+          lastUpdateCount = i + 1;
+        }
       }
 
       bar.stop();
